@@ -2,7 +2,7 @@
 
 Aplicação web para consulta e acompanhamento de cotações de moedas em relação ao Real Brasileiro (BRL).
 
-O projeto foi desenvolvido com uma arquitetura de monólito modular, separando frontend e backend em um monorepo com npm workspaces. As cotações são obtidas por meio da AwesomeAPI e passam por uma camada de cache com Redis antes de serem entregues ao frontend.
+O projeto foi desenvolvido com uma arquitetura de **monólito modular**, separando frontend e backend em um monorepo com npm workspaces. As cotações são obtidas por meio da AwesomeAPI e passam por uma camada de cache com Redis antes de serem entregues ao frontend.
 
 Além da consulta de cotações, a aplicação possui histórico de preços, autenticação de usuários e persistência de moedas favoritas.
 
@@ -25,23 +25,25 @@ Além da consulta de cotações, a aplicação possui histórico de preços, aut
 - Proteção contra cache stampede
 - Fallback em caso de indisponibilidade do Redis ou da API externa
 - Interface responsiva
+- Documentação da API com Swagger/OpenAPI
+- Testes automatizados no backend e frontend
 
 ## Moedas disponíveis
 
 Atualmente a aplicação acompanha:
 
-| Código | Moeda |
-| --- | --- |
-| USD | Dólar Americano |
-| EUR | Euro |
-| GBP | Libra Esterlina |
-| JPY | Iene Japonês |
-| CAD | Dólar Canadense |
-| AUD | Dólar Australiano |
-| CHF | Franco Suíço |
-| CNY | Yuan Chinês |
-| ARS | Peso Argentino |
-| MXN | Peso Mexicano |
+| Código | Moeda             |
+| ------ | ----------------- |
+| USD    | Dólar Americano   |
+| EUR    | Euro              |
+| GBP    | Libra Esterlina   |
+| JPY    | Iene Japonês      |
+| CAD    | Dólar Canadense   |
+| AUD    | Dólar Australiano |
+| CHF    | Franco Suíço      |
+| CNY    | Yuan Chinês       |
+| ARS    | Peso Argentino    |
+| MXN    | Peso Mexicano     |
 
 ## Tecnologias
 
@@ -57,6 +59,8 @@ Atualmente a aplicação acompanha:
 - Axios
 - Recharts
 - Lucide React
+- Vitest
+- React Testing Library
 
 ### Backend
 
@@ -71,6 +75,9 @@ Atualmente a aplicação acompanha:
 - Argon2
 - class-validator
 - class-transformer
+- Swagger / OpenAPI
+- Jest
+- Supertest
 
 ### Infraestrutura
 
@@ -140,6 +147,7 @@ currency-quote/
 │       └── package.json
 │
 ├── compose.yaml
+├── README.md
 └── package.json
 ```
 
@@ -329,7 +337,7 @@ Para executar o projeto localmente é necessário possuir:
 Clone o repositório e acesse a pasta do projeto:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/natachacgr/currency-quote.git
 cd currency-quote
 ```
 
@@ -359,13 +367,9 @@ Configuração de desenvolvimento:
 
 ```env
 DATABASE_URL="postgresql://currency_quote:currency_quote@localhost:5432/currency_quote?schema=public"
-
 REDIS_URL="redis://localhost:6379"
-
 EXCHANGE_RATES_CACHE_TTL=30
-
 JWT_SECRET="change-this-secret-in-production"
-
 JWT_EXPIRES_IN="1h"
 ```
 
@@ -389,10 +393,10 @@ docker compose ps
 
 Os serviços configurados são:
 
-| Serviço | Porta |
-| --- | ---: |
-| PostgreSQL | 5432 |
-| Redis | 6379 |
+| Serviço    | Porta |
+| ---------- | ----: |
+| PostgreSQL |  5432 |
+| Redis      |  6379 |
 
 Os dados são armazenados em volumes Docker para que não sejam perdidos quando os containers forem reiniciados.
 
@@ -452,19 +456,26 @@ Durante o desenvolvimento, o frontend Vite é disponibilizado em:
 http://localhost:5173
 ```
 
+A API NestJS é disponibilizada em:
+
+```text
+http://localhost:3000
+```
+
 ## Scripts
 
-Os principais comandos disponíveis na raiz são:
+Os principais comandos disponíveis são:
 
-| Comando | Descrição |
-| --- | --- |
-| `npm run dev:api` | Inicia a API em modo de desenvolvimento |
-| `npm run dev:web` | Inicia o frontend em modo de desenvolvimento |
-| `npm run build:api` | Gera o build da API |
-| `npm run build:web` | Gera o build do frontend |
-| `npm run test:api` | Executa os testes da API |
+| Comando                        | Descrição                                    |
+| ------------------------------ | -------------------------------------------- |
+| `npm run dev:api`              | Inicia a API em modo de desenvolvimento      |
+| `npm run dev:web`              | Inicia o frontend em modo de desenvolvimento |
+| `npm run build:api`            | Gera o build da API                          |
+| `npm run build:web`            | Gera o build do frontend                     |
+| `npm run test:api`             | Executa os testes unitários da API           |
+| `npm run test --workspace=web` | Executa os testes do frontend                |
 
-A API também possui comandos próprios, como:
+A API também possui comandos próprios:
 
 ```bash
 npm run lint --workspace=api
@@ -484,7 +495,7 @@ A API disponibiliza recursos para:
 
 Entre as operações implementadas estão autenticação, identificação do usuário autenticado, consulta de cotações, consulta de histórico e gerenciamento de favoritos.
 
-Exemplos:
+### Principais endpoints
 
 ```http
 GET /exchange-rates
@@ -506,17 +517,31 @@ POST /favorites/USD
 DELETE /favorites/USD
 ```
 
-Rotas privadas devem receber o token:
+Rotas privadas devem receber o token JWT:
 
 ```http
 Authorization: Bearer <access_token>
 ```
 
+## Documentação da API
+
+A API possui documentação interativa gerada com **Swagger/OpenAPI**.
+
+Com o backend em execução, a documentação pode ser acessada em:
+
+```text
+http://localhost:3000/docs
+```
+
+A documentação permite visualizar os endpoints disponíveis, parâmetros, queries e rotas protegidas da aplicação.
+
 ## Atualização das cotações
 
 No frontend, as cotações atuais são gerenciadas com TanStack Query.
 
-A aplicação realiza atualização periódica das cotações, enquanto o backend utiliza Redis para impedir que cada atualização de cada cliente resulte em uma nova chamada à AwesomeAPI.
+A aplicação realiza atualização periódica das cotações a cada 30 segundos enquanto a interface está em uso.
+
+O backend utiliza Redis com cache das cotações para impedir que cada atualização de cada cliente resulte necessariamente em uma nova chamada à AwesomeAPI.
 
 Essa combinação permite manter a interface atualizada sem sobrecarregar desnecessariamente o serviço externo.
 
@@ -544,26 +569,76 @@ npm run build:web
 
 ## Testes
 
-O backend está configurado para utilizar:
+O projeto possui testes automatizados no backend e no frontend.
 
-- Jest
-- Supertest
+### Backend
 
-Os scripts disponíveis incluem:
+O backend utiliza **Jest** e **Supertest**.
 
-```bash
-npm run test:api
-```
+A suíte possui **45 testes**, sendo:
 
-ou, diretamente no workspace da API:
+- 25 testes unitários;
+- 20 testes E2E.
+
+Os testes cobrem cenários relacionados a:
+
+- autenticação;
+- JWT e proteção de rotas;
+- consulta de cotações;
+- histórico de cotações;
+- favoritos;
+- validação de parâmetros e DTOs;
+- comportamento dos principais serviços;
+- integração entre controllers e serviços.
+
+Para executar os testes unitários:
 
 ```bash
 npm run test --workspace=api
-npm run test:cov --workspace=api
+```
+
+Para executar os testes E2E:
+
+```bash
 npm run test:e2e --workspace=api
 ```
 
-A cobertura definitiva dos testes deve refletir apenas os cenários efetivamente implementados na suíte.
+Para executar a cobertura:
+
+```bash
+npm run test:cov --workspace=api
+```
+
+### Frontend
+
+O frontend utiliza **Vitest** e **React Testing Library**.
+
+A suíte possui **14 testes**, cobrindo:
+
+- persistência da sessão de autenticação;
+- comportamento de rotas protegidas;
+- consulta de cotações com TanStack Query;
+- estados de carregamento, sucesso e erro;
+- carregamento de favoritos;
+- adição e remoção de favoritos;
+- invalidação do cache do TanStack Query após mutations.
+
+Para executar:
+
+```bash
+npm run test --workspace=web
+```
+
+### Total
+
+Atualmente o projeto possui **59 testes automatizados**:
+
+```text
+Backend   45
+Frontend  14
+────────────
+Total     59
+```
 
 ## Decisões técnicas
 
@@ -599,12 +674,19 @@ Centralizar a integração no backend permite:
 - alterar o provedor externo sem modificar o frontend;
 - manter as regras de integração em um único lugar.
 
+### Por que TanStack Query no frontend?
+
+As cotações e os favoritos representam principalmente estado remoto.
+
+O TanStack Query permite controlar cache, atualização periódica, estados de carregamento e erro e invalidação após mutations sem introduzir uma biblioteca global de estado sem necessidade.
+
 ## Melhorias futuras
 
 Algumas evoluções possíveis incluem:
 
-- observabilidade e métricas;
-- rate limiting;
-- aprimoramento do tratamento de conflitos de operações concorrentes;
+- observabilidade, métricas e tracing;
+- rate limiting por usuário/IP;
+- tratamento específico de conflitos concorrentes no cadastro e nos favoritos;
 - pipeline de CI/CD;
-- deploy automatizado.
+- deploy automatizado;
+- otimização do bundle do frontend com code splitting.

@@ -28,8 +28,8 @@ export function RegisterPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("A senha deve possuir pelo menos 6 caracteres.");
+    if (password.length < 8) {
+      setError("A senha deve possuir pelo menos 8 caracteres.");
       return;
     }
 
@@ -148,7 +148,7 @@ export function RegisterPage() {
                 </div>
 
                 <p className="text-xs text-muted-foreground">
-                  Utilize pelo menos 6 caracteres.
+                  Utilize pelo menos 8 caracteres.
                 </p>
               </div>
 

@@ -1,10 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 
-import { exchangeRatesService } from '@/services/exchange-rates.service'
+import { exchangeRatesService } from "@/services/exchange-rates.service";
 
-export const exchangeRatesQueryKey = [
-  'exchange-rates',
-] as const
+export const exchangeRatesQueryKey = ["exchange-rates"] as const;
 
 export function useExchangeRates() {
   return useQuery({
@@ -16,5 +14,5 @@ export function useExchangeRates() {
 
     // Atualiza automaticamente enquanto a página estiver aberta.
     refetchInterval: 30_000,
-  })
+  });
 }

@@ -1,10 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class RegisterDto {
   @ApiProperty({
@@ -28,8 +23,7 @@ export class RegisterDto {
   email!: string;
 
   @ApiProperty({
-    description:
-      'Senha do usuário. Deve possuir entre 8 e 72 caracteres.',
+    description: 'Senha do usuário. Deve possuir entre 8 e 72 caracteres.',
     example: 'Senha123',
     minLength: 8,
     maxLength: 72,

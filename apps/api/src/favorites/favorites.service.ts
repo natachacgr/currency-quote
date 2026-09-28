@@ -8,9 +8,7 @@ import { PrismaService } from '../database/prisma/prisma.service';
 
 @Injectable()
 export class FavoritesService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAllByUser(userId: string) {
     return this.prisma.favoriteCurrency.findMany({
@@ -27,31 +25,26 @@ export class FavoritesService {
   }
 
   async add(userId: string, currencyCode: string) {
-    const normalizedCode =
-      currencyCode.trim().toUpperCase();
+    const normalizedCode = currencyCode.trim().toUpperCase();
 
-    const currency =
-      await this.prisma.currency.findUnique({
-        where: {
-          code: normalizedCode,
-        },
-      });
+    const currency = await this.prisma.currency.findUnique({
+      where: {
+        code: normalizedCode,
+      },
+    });
 
     if (!currency) {
-      throw new NotFoundException(
-        `Currency "${normalizedCode}" was not found`,
-      );
+      throw new NotFoundException(`Currency "${normalizedCode}" was not found`);
     }
 
-    const existingFavorite =
-      await this.prisma.favoriteCurrency.findUnique({
-        where: {
-          userId_currencyId: {
-            userId,
-            currencyId: currency.id,
-          },
+    const existingFavorite = await this.prisma.favoriteCurrency.findUnique({
+      where: {
+        userId_currencyId: {
+          userId,
+          currencyId: currency.id,
         },
-      });
+      },
+    });
 
     if (existingFavorite) {
       throw new ConflictException(
@@ -71,31 +64,26 @@ export class FavoritesService {
   }
 
   async remove(userId: string, currencyCode: string) {
-    const normalizedCode =
-      currencyCode.trim().toUpperCase();
+    const normalizedCode = currencyCode.trim().toUpperCase();
 
-    const currency =
-      await this.prisma.currency.findUnique({
-        where: {
-          code: normalizedCode,
-        },
-      });
+    const currency = await this.prisma.currency.findUnique({
+      where: {
+        code: normalizedCode,
+      },
+    });
 
     if (!currency) {
-      throw new NotFoundException(
-        `Currency "${normalizedCode}" was not found`,
-      );
+      throw new NotFoundException(`Currency "${normalizedCode}" was not found`);
     }
 
-    const favorite =
-      await this.prisma.favoriteCurrency.findUnique({
-        where: {
-          userId_currencyId: {
-            userId,
-            currencyId: currency.id,
-          },
+    const favorite = await this.prisma.favoriteCurrency.findUnique({
+      where: {
+        userId_currencyId: {
+          userId,
+          currencyId: currency.id,
         },
-      });
+      },
+    });
 
     if (!favorite) {
       throw new NotFoundException(

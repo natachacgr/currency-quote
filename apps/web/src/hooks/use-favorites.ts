@@ -1,21 +1,17 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { favoritesService } from '@/services/favorites.service'
+import { favoritesService } from "@/services/favorites.service";
 
-export const favoritesQueryKey = ['favorites'] as const
+export const favoritesQueryKey = ["favorites"] as const;
 
 export function useFavorites(enabled = true) {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const favoritesQuery = useQuery({
     queryKey: favoritesQueryKey,
     queryFn: favoritesService.getFavorites,
     enabled,
-  })
+  });
 
   const addFavoriteMutation = useMutation({
     mutationFn: (currencyCode: string) =>
@@ -24,9 +20,9 @@ export function useFavorites(enabled = true) {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: favoritesQueryKey,
-      })
+      });
     },
-  })
+  });
 
   const removeFavoriteMutation = useMutation({
     mutationFn: (currencyCode: string) =>
@@ -35,9 +31,9 @@ export function useFavorites(enabled = true) {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: favoritesQueryKey,
-      })
+      });
     },
-  })
+  });
 
   return {
     favorites: favoritesQuery.data ?? [],
@@ -47,9 +43,7 @@ export function useFavorites(enabled = true) {
     addFavorite: addFavoriteMutation.mutate,
     removeFavorite: removeFavoriteMutation.mutate,
 
-    isAddingFavorite:
-      addFavoriteMutation.isPending,
-    isRemovingFavorite:
-      removeFavoriteMutation.isPending,
-  }
+    isAddingFavorite: addFavoriteMutation.isPending,
+    isRemovingFavorite: removeFavoriteMutation.isPending,
+  };
 }

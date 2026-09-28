@@ -49,10 +49,7 @@ export class ExchangeRatesService {
 
     const lockToken = randomUUID();
 
-    const lockAcquired = await this.tryAcquireLock(
-      lockKey,
-      lockToken,
-    );
+    const lockAcquired = await this.tryAcquireLock(lockKey, lockToken);
 
     if (lockAcquired === null) {
       return this.exchangeRateProvider.getRates(normalizedCodes);
@@ -72,18 +69,11 @@ export class ExchangeRatesService {
           staleCacheKey,
         );
       } finally {
-        await this.tryReleaseLock(
-          lockKey,
-          lockToken,
-        );
+        await this.tryReleaseLock(lockKey, lockToken);
       }
     }
 
-    for (
-      let attempt = 0;
-      attempt < this.lockRetryAttempts;
-      attempt += 1
-    ) {
+    for (let attempt = 0; attempt < this.lockRetryAttempts; attempt += 1) {
       await this.sleep(this.lockRetryDelay);
 
       const rates = await this.getCachedRates(cacheKey);
@@ -93,11 +83,7 @@ export class ExchangeRatesService {
       }
     }
 
-    return this.fetchAndCacheRates(
-      normalizedCodes,
-      cacheKey,
-      staleCacheKey,
-    );
+    return this.fetchAndCacheRates(normalizedCodes, cacheKey, staleCacheKey);
   }
 
   async getHistory(
@@ -106,14 +92,12 @@ export class ExchangeRatesService {
   ): Promise<ExchangeRateHistoryPoint[]> {
     const normalizedCode = currencyCode.trim().toUpperCase();
 
-    const cacheKey =
-      `exchange-rate-history:${normalizedCode}:${days}`;
+    const cacheKey = `exchange-rate-history:${normalizedCode}:${days}`;
 
     const staleCacheKey = `stale:${cacheKey}`;
     const lockKey = `lock:${cacheKey}`;
 
-    const cachedHistory =
-      await this.getCachedHistory(cacheKey);
+    const cachedHistory = await this.getCachedHistory(cacheKey);
 
     if (cachedHistory) {
       return cachedHistory;
@@ -121,22 +105,15 @@ export class ExchangeRatesService {
 
     const lockToken = randomUUID();
 
-    const lockAcquired = await this.tryAcquireLock(
-      lockKey,
-      lockToken,
-    );
+    const lockAcquired = await this.tryAcquireLock(lockKey, lockToken);
 
     if (lockAcquired === null) {
-      return this.exchangeRateProvider.getHistory(
-        normalizedCode,
-        days,
-      );
+      return this.exchangeRateProvider.getHistory(normalizedCode, days);
     }
 
     if (lockAcquired) {
       try {
-        const historyAfterLock =
-          await this.getCachedHistory(cacheKey);
+        const historyAfterLock = await this.getCachedHistory(cacheKey);
 
         if (historyAfterLock) {
           return historyAfterLock;
@@ -149,22 +126,14 @@ export class ExchangeRatesService {
           staleCacheKey,
         );
       } finally {
-        await this.tryReleaseLock(
-          lockKey,
-          lockToken,
-        );
+        await this.tryReleaseLock(lockKey, lockToken);
       }
     }
 
-    for (
-      let attempt = 0;
-      attempt < this.lockRetryAttempts;
-      attempt += 1
-    ) {
+    for (let attempt = 0; attempt < this.lockRetryAttempts; attempt += 1) {
       await this.sleep(this.lockRetryDelay);
 
-      const history =
-        await this.getCachedHistory(cacheKey);
+      const history = await this.getCachedHistory(cacheKey);
 
       if (history) {
         return history;
@@ -185,26 +154,16 @@ export class ExchangeRatesService {
     staleCacheKey: string,
   ): Promise<ExchangeRate[]> {
     try {
-      const rates =
-        await this.exchangeRateProvider.getRates(currencyCodes);
+      const rates = await this.exchangeRateProvider.getRates(currencyCodes);
 
       await Promise.all([
-        this.trySetCache(
-          cacheKey,
-          rates,
-          this.cacheTtl,
-        ),
-        this.trySetCache(
-          staleCacheKey,
-          rates,
-          this.staleCacheTtl,
-        ),
+        this.trySetCache(cacheKey, rates, this.cacheTtl),
+        this.trySetCache(staleCacheKey, rates, this.staleCacheTtl),
       ]);
 
       return rates;
     } catch (error) {
-      const staleRates =
-        await this.getCachedRates(staleCacheKey);
+      const staleRates = await this.getCachedRates(staleCacheKey);
 
       if (staleRates) {
         this.logger.warn(
@@ -225,29 +184,19 @@ export class ExchangeRatesService {
     staleCacheKey: string,
   ): Promise<ExchangeRateHistoryPoint[]> {
     try {
-      const history =
-        await this.exchangeRateProvider.getHistory(
-          currencyCode,
-          days,
-        );
+      const history = await this.exchangeRateProvider.getHistory(
+        currencyCode,
+        days,
+      );
 
       await Promise.all([
-        this.trySetCache(
-          cacheKey,
-          history,
-          this.historyCacheTtl,
-        ),
-        this.trySetCache(
-          staleCacheKey,
-          history,
-          this.staleHistoryCacheTtl,
-        ),
+        this.trySetCache(cacheKey, history, this.historyCacheTtl),
+        this.trySetCache(staleCacheKey, history, this.staleHistoryCacheTtl),
       ]);
 
       return history;
     } catch (error) {
-      const staleHistory =
-        await this.getCachedHistory(staleCacheKey);
+      const staleHistory = await this.getCachedHistory(staleCacheKey);
 
       if (staleHistory) {
         this.logger.warn(
@@ -265,8 +214,7 @@ export class ExchangeRatesService {
     cacheKey: string,
   ): Promise<ExchangeRate[] | null> {
     try {
-      const cachedRates =
-        await this.redisService.get<ExchangeRate[]>(cacheKey);
+      const cachedRates = await this.redisService.get<ExchangeRate[]>(cacheKey);
 
       if (!cachedRates) {
         return null;
@@ -290,9 +238,7 @@ export class ExchangeRatesService {
   ): Promise<ExchangeRateHistoryPoint[] | null> {
     try {
       const cachedHistory =
-        await this.redisService.get<ExchangeRateHistoryPoint[]>(
-          cacheKey,
-        );
+        await this.redisService.get<ExchangeRateHistoryPoint[]>(cacheKey);
 
       if (!cachedHistory) {
         return null;
@@ -317,11 +263,7 @@ export class ExchangeRatesService {
     ttlInSeconds: number,
   ): Promise<void> {
     try {
-      await this.redisService.set(
-        cacheKey,
-        value,
-        ttlInSeconds,
-      );
+      await this.redisService.set(cacheKey, value, ttlInSeconds);
     } catch (error) {
       this.logger.warn(
         `Redis cache write failed for key "${cacheKey}": ${this.getErrorMessage(error)}`,
@@ -353,10 +295,7 @@ export class ExchangeRatesService {
     lockToken: string,
   ): Promise<void> {
     try {
-      await this.redisService.releaseLock(
-        lockKey,
-        lockToken,
-      );
+      await this.redisService.releaseLock(lockKey, lockToken);
     } catch (error) {
       this.logger.warn(
         `Redis lock release failed for key "${lockKey}": ${this.getErrorMessage(error)}`,
@@ -365,9 +304,7 @@ export class ExchangeRatesService {
   }
 
   private getErrorMessage(error: unknown): string {
-    return error instanceof Error
-      ? error.message
-      : 'Unknown error';
+    return error instanceof Error ? error.message : 'Unknown error';
   }
 
   private sleep(milliseconds: number): Promise<void> {

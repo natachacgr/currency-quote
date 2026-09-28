@@ -92,17 +92,8 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     return JSON.parse(value) as T;
   }
 
-  async set<T>(
-    key: string,
-    value: T,
-    ttlInSeconds: number,
-  ): Promise<void> {
-    await this.client.set(
-      key,
-      JSON.stringify(value),
-      'EX',
-      ttlInSeconds,
-    );
+  async set<T>(key: string, value: T, ttlInSeconds: number): Promise<void> {
+    await this.client.set(key, JSON.stringify(value), 'EX', ttlInSeconds);
   }
 
   async delete(key: string): Promise<void> {
@@ -114,21 +105,12 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     token: string,
     ttlInSeconds: number,
   ): Promise<boolean> {
-    const result = await this.client.set(
-      key,
-      token,
-      'EX',
-      ttlInSeconds,
-      'NX',
-    );
+    const result = await this.client.set(key, token, 'EX', ttlInSeconds, 'NX');
 
     return result === 'OK';
   }
 
-  async releaseLock(
-    key: string,
-    token: string,
-  ): Promise<boolean> {
+  async releaseLock(key: string, token: string): Promise<boolean> {
     const script = `
       if redis.call("GET", KEYS[1]) == ARGV[1] then
         return redis.call("DEL", KEYS[1])
@@ -137,12 +119,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       return 0
     `;
 
-    const result = await this.client.eval(
-      script,
-      1,
-      key,
-      token,
-    );
+    const result = await this.client.eval(script, 1, key, token);
 
     return result === 1;
   }
@@ -152,8 +129,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   private getErrorMessage(error: unknown): string {
-    return error instanceof Error
-      ? error.message
-      : 'Unknown Redis error';
+    return error instanceof Error ? error.message : 'Unknown Redis error';
   }
 }

@@ -33,15 +33,9 @@ const config: Config = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
 
-  testMatch: [
-    '<rootDir>/src/**/*.spec.ts',
-  ],
+  testMatch: ['<rootDir>/src/**/*.spec.ts'],
 
-  moduleFileExtensions: [
-    'ts',
-    'js',
-    'json',
-  ],
+  moduleFileExtensions: ['ts', 'js', 'json'],
 
   clearMocks: true,
 };

@@ -1,17 +1,17 @@
-import { ExchangeRateFilters } from '@/components/exchange-rates/exchange-rate-filters'
-import type { SortOption } from '@/components/exchange-rates/exchange-rate-filters'
-import { ExchangeRateGrid } from '@/components/exchange-rates/exchange-rate-grid'
-import type { ExchangeRate } from '@/types/exchange-rate'
+import { ExchangeRateFilters } from "@/components/exchange-rates/exchange-rate-filters";
+import type { SortOption } from "@/components/exchange-rates/exchange-rate-filters";
+import { ExchangeRateGrid } from "@/components/exchange-rates/exchange-rate-grid";
+import type { ExchangeRate } from "@/types/exchange-rate";
 
 interface ExchangeRateSectionProps {
-  rates: ExchangeRate[]
-  search: string
-  sortBy: SortOption
-  isLoading: boolean
-  isError: boolean
-  onSearchChange: (value: string) => void
-  onSortChange: (value: SortOption) => void
-  onRetry: () => void
+  rates: ExchangeRate[];
+  search: string;
+  sortBy: SortOption;
+  isLoading: boolean;
+  isError: boolean;
+  onSearchChange: (value: string) => void;
+  onSortChange: (value: SortOption) => void;
+  onRetry: () => void;
 }
 
 export function ExchangeRateSection({
@@ -54,5 +54,5 @@ export function ExchangeRateSection({
         />
       </div>
     </section>
-  )
+  );
 }

@@ -1,15 +1,6 @@
-import {
-  ConflictException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import type { JwtService } from '@nestjs/jwt';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import * as argon2 from 'argon2';
 
 import type { UsersService } from '../users/users.service';
@@ -26,26 +17,15 @@ describe('AuthService', () => {
   let authService: AuthService;
 
   let usersService: {
-    findByEmail: jest.Mock<
-      (email: string) => Promise<MockUser | null>
-    >;
+    findByEmail: jest.Mock<(email: string) => Promise<MockUser | null>>;
     create: jest.Mock<
-      (
-        name: string,
-        email: string,
-        passwordHash: string,
-      ) => Promise<MockUser>
+      (name: string, email: string, passwordHash: string) => Promise<MockUser>
     >;
   };
 
   let jwtService: {
     signAsync: jest.Mock<
-      (
-        payload: {
-          sub: string;
-          email: string;
-        },
-      ) => Promise<string>
+      (payload: { sub: string; email: string }) => Promise<string>
     >;
   };
 
@@ -72,11 +52,7 @@ describe('AuthService', () => {
       usersService.findByEmail.mockResolvedValue(null);
 
       usersService.create.mockImplementation(
-        async (
-          name: string,
-          email: string,
-          passwordHash: string,
-        ) => ({
+        async (name: string, email: string, passwordHash: string) => ({
           id: 'user-1',
           name,
           email,
@@ -84,9 +60,7 @@ describe('AuthService', () => {
         }),
       );
 
-      jwtService.signAsync.mockResolvedValue(
-        'access-token',
-      );
+      jwtService.signAsync.mockResolvedValue('access-token');
 
       const result = await authService.register({
         name: 'Natacha',
@@ -94,35 +68,20 @@ describe('AuthService', () => {
         password: 'password123',
       });
 
-      expect(
-        usersService.findByEmail,
-      ).toHaveBeenCalledWith(
+      expect(usersService.findByEmail).toHaveBeenCalledWith(
         'natacha@email.com',
       );
 
-      expect(
-        usersService.create,
-      ).toHaveBeenCalledTimes(1);
+      expect(usersService.create).toHaveBeenCalledTimes(1);
 
-      const [
-        name,
-        email,
-        passwordHash,
-      ] = usersService.create.mock.calls[0];
+      const [name, email, passwordHash] = usersService.create.mock.calls[0];
 
       expect(name).toBe('Natacha');
       expect(email).toBe('natacha@email.com');
 
-      expect(
-        await argon2.verify(
-          passwordHash,
-          'password123',
-        ),
-      ).toBe(true);
+      expect(await argon2.verify(passwordHash, 'password123')).toBe(true);
 
-      expect(
-        jwtService.signAsync,
-      ).toHaveBeenCalledWith({
+      expect(jwtService.signAsync).toHaveBeenCalledWith({
         sub: 'user-1',
         email: 'natacha@email.com',
       });
@@ -153,21 +112,15 @@ describe('AuthService', () => {
         }),
       ).rejects.toThrow(ConflictException);
 
-      expect(
-        usersService.create,
-      ).not.toHaveBeenCalled();
+      expect(usersService.create).not.toHaveBeenCalled();
 
-      expect(
-        jwtService.signAsync,
-      ).not.toHaveBeenCalled();
+      expect(jwtService.signAsync).not.toHaveBeenCalled();
     });
   });
 
   describe('login', () => {
     it('should authenticate a user and return an access token', async () => {
-      const passwordHash = await argon2.hash(
-        'password123',
-      );
+      const passwordHash = await argon2.hash('password123');
 
       usersService.findByEmail.mockResolvedValue({
         id: 'user-1',
@@ -176,24 +129,18 @@ describe('AuthService', () => {
         passwordHash,
       });
 
-      jwtService.signAsync.mockResolvedValue(
-        'access-token',
-      );
+      jwtService.signAsync.mockResolvedValue('access-token');
 
       const result = await authService.login({
         email: 'NATACHA@EMAIL.COM',
         password: 'password123',
       });
 
-      expect(
-        usersService.findByEmail,
-      ).toHaveBeenCalledWith(
+      expect(usersService.findByEmail).toHaveBeenCalledWith(
         'natacha@email.com',
       );
 
-      expect(
-        jwtService.signAsync,
-      ).toHaveBeenCalledWith({
+      expect(jwtService.signAsync).toHaveBeenCalledWith({
         sub: 'user-1',
         email: 'natacha@email.com',
       });
@@ -218,15 +165,11 @@ describe('AuthService', () => {
         }),
       ).rejects.toThrow(UnauthorizedException);
 
-      expect(
-        jwtService.signAsync,
-      ).not.toHaveBeenCalled();
+      expect(jwtService.signAsync).not.toHaveBeenCalled();
     });
 
     it('should throw UnauthorizedException when password is incorrect', async () => {
-      const passwordHash = await argon2.hash(
-        'password123',
-      );
+      const passwordHash = await argon2.hash('password123');
 
       usersService.findByEmail.mockResolvedValue({
         id: 'user-1',
@@ -242,9 +185,7 @@ describe('AuthService', () => {
         }),
       ).rejects.toThrow(UnauthorizedException);
 
-      expect(
-        jwtService.signAsync,
-      ).not.toHaveBeenCalled();
+      expect(jwtService.signAsync).not.toHaveBeenCalled();
     });
   });
 });

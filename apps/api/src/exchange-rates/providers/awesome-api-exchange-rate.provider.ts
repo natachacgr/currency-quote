@@ -34,18 +34,14 @@ type AwesomeApiResponse = Record<string, AwesomeApiRate>;
 
 @Injectable()
 export class AwesomeApiExchangeRateProvider extends ExchangeRateProvider {
-  private readonly logger = new Logger(
-    AwesomeApiExchangeRateProvider.name,
-  );
+  private readonly logger = new Logger(AwesomeApiExchangeRateProvider.name);
 
   private readonly baseUrl = 'https://economia.awesomeapi.com.br';
   private readonly requestTimeout = 5000;
   private readonly maxAttempts = 2;
   private readonly retryDelay = 300;
 
-  async getRates(
-    currencyCodes: string[],
-  ): Promise<ExchangeRate[]> {
+  async getRates(currencyCodes: string[]): Promise<ExchangeRate[]> {
     if (currencyCodes.length === 0) {
       return [];
     }
@@ -92,35 +88,21 @@ export class AwesomeApiExchangeRateProvider extends ExchangeRateProvider {
       }))
       .sort(
         (first, second) =>
-          first.timestamp.getTime() -
-          second.timestamp.getTime(),
+          first.timestamp.getTime() - second.timestamp.getTime(),
       );
   }
 
-  private async request<T>(
-    path: string,
-  ): Promise<T> {
+  private async request<T>(path: string): Promise<T> {
     let lastError: unknown;
 
-    for (
-      let attempt = 1;
-      attempt <= this.maxAttempts;
-      attempt += 1
-    ) {
+    for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
       try {
-        const response = await fetch(
-          `${this.baseUrl}${path}`,
-          {
-            signal: AbortSignal.timeout(
-              this.requestTimeout,
-            ),
-          },
-        );
+        const response = await fetch(`${this.baseUrl}${path}`, {
+          signal: AbortSignal.timeout(this.requestTimeout),
+        });
 
         if (!response.ok) {
-          const error = new AwesomeApiHttpError(
-            response.status,
-          );
+          const error = new AwesomeApiHttpError(response.status);
 
           if (!this.shouldRetryStatus(response.status)) {
             throw error;
@@ -168,9 +150,7 @@ export class AwesomeApiExchangeRateProvider extends ExchangeRateProvider {
 
 class AwesomeApiHttpError extends Error {
   constructor(readonly status: number) {
-    super(
-      `AwesomeAPI request failed with status ${status}`,
-    );
+    super(`AwesomeAPI request failed with status ${status}`);
 
     this.name = 'AwesomeApiHttpError';
   }

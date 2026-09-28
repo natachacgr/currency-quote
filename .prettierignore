@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-test
+coverage
+
+apps/*/node_modules
+apps/*/dist
+apps/*/dist-test
+
+apps/api/src/generated

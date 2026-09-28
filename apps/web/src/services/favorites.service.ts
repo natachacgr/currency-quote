@@ -1,28 +1,22 @@
-import { api } from '@/lib/api'
-import type { FavoriteCurrency } from '@/types/favorite'
+import { api } from "@/lib/api";
+import type { FavoriteCurrency } from "@/types/favorite";
 
 export const favoritesService = {
   async getFavorites(): Promise<FavoriteCurrency[]> {
-    const { data } = await api.get<FavoriteCurrency[]>(
-      '/favorites',
-    )
+    const { data } = await api.get<FavoriteCurrency[]>("/favorites");
 
-    return data
+    return data;
   },
 
-  async addFavorite(
-    currencyCode: string,
-  ): Promise<FavoriteCurrency> {
+  async addFavorite(currencyCode: string): Promise<FavoriteCurrency> {
     const { data } = await api.post<FavoriteCurrency>(
       `/favorites/${currencyCode}`,
-    )
+    );
 
-    return data
+    return data;
   },
 
-  async removeFavorite(
-    currencyCode: string,
-  ): Promise<void> {
-    await api.delete(`/favorites/${currencyCode}`)
+  async removeFavorite(currencyCode: string): Promise<void> {
+    await api.delete(`/favorites/${currencyCode}`);
   },
-}
+};

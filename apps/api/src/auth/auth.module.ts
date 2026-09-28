@@ -19,8 +19,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const secret =
-          configService.get<string>('JWT_SECRET');
+        const secret = configService.get<string>('JWT_SECRET');
 
         if (!secret) {
           throw new Error('JWT_SECRET is not defined');
@@ -36,14 +35,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-  ],
-  exports: [
-    AuthService,
-    JwtModule,
-    PassportModule,
-  ],
+  providers: [AuthService, JwtStrategy],
+  exports: [AuthService, JwtModule, PassportModule],
 })
 export class AuthModule {}

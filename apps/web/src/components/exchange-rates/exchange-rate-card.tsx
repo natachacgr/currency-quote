@@ -4,32 +4,32 @@ import {
   LoaderCircle,
   Minus,
   Star,
-} from 'lucide-react'
+} from "lucide-react";
 
-import type { ExchangeRate } from '@/types/exchange-rate'
+import type { ExchangeRate } from "@/types/exchange-rate";
 
 interface ExchangeRateCardProps {
-  rate: ExchangeRate
-  isFavorite?: boolean
-  isFavoritePending?: boolean
-  onFavoriteToggle?: (currencyCode: string) => void
+  rate: ExchangeRate;
+  isFavorite?: boolean;
+  isFavoritePending?: boolean;
+  onFavoriteToggle?: (currencyCode: string) => void;
 }
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
     minimumFractionDigits: 4,
     maximumFractionDigits: 4,
-  }).format(value)
+  }).format(value);
 }
 
 function formatCurrencyName(name: string): string {
-  return name.split('/')[0]?.trim() ?? name
+  return name.split("/")[0]?.trim() ?? name;
 }
 
 function formatVariation(value: number): string {
-  return `${Math.abs(value).toFixed(2)}%`
+  return `${Math.abs(value).toFixed(2)}%`;
 }
 
 export function ExchangeRateCard({
@@ -38,18 +38,18 @@ export function ExchangeRateCard({
   isFavoritePending = false,
   onFavoriteToggle,
 }: ExchangeRateCardProps) {
-  const isPositive = rate.variation > 0
-  const isNegative = rate.variation < 0
+  const isPositive = rate.variation > 0;
+  const isNegative = rate.variation < 0;
 
   const variationClassName = isPositive
-    ? 'text-emerald-600 dark:text-emerald-400'
+    ? "text-emerald-600 dark:text-emerald-400"
     : isNegative
-      ? 'text-red-600 dark:text-red-400'
-      : 'text-muted-foreground'
+      ? "text-red-600 dark:text-red-400"
+      : "text-muted-foreground";
 
   const favoriteTitle = isFavorite
-    ? 'Remover dos favoritos'
-    : 'Adicionar aos favoritos'
+    ? "Remover dos favoritos"
+    : "Adicionar aos favoritos";
 
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
@@ -60,9 +60,7 @@ export function ExchangeRateCard({
               {rate.code}
             </span>
 
-            <span className="text-sm text-muted-foreground">
-              / BRL
-            </span>
+            <span className="text-sm text-muted-foreground">/ BRL</span>
           </div>
 
           <p className="mt-1 text-xs text-muted-foreground">
@@ -83,9 +81,7 @@ export function ExchangeRateCard({
           ) : (
             <Star
               className={`size-4 transition-colors ${
-                isFavorite
-                  ? 'fill-amber-400 text-amber-400'
-                  : ''
+                isFavorite ? "fill-amber-400 text-amber-400" : ""
               }`}
             />
           )}
@@ -122,9 +118,7 @@ export function ExchangeRateCard({
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4">
         <div>
-          <p className="text-xs text-muted-foreground">
-            Compra
-          </p>
+          <p className="text-xs text-muted-foreground">Compra</p>
 
           <p className="mt-1 text-sm font-medium tabular-nums">
             {formatCurrency(rate.bid)}
@@ -132,9 +126,7 @@ export function ExchangeRateCard({
         </div>
 
         <div>
-          <p className="text-xs text-muted-foreground">
-            Venda
-          </p>
+          <p className="text-xs text-muted-foreground">Venda</p>
 
           <p className="mt-1 text-sm font-medium tabular-nums">
             {formatCurrency(rate.ask)}
@@ -142,9 +134,7 @@ export function ExchangeRateCard({
         </div>
 
         <div>
-          <p className="text-xs text-muted-foreground">
-            Máxima
-          </p>
+          <p className="text-xs text-muted-foreground">Máxima</p>
 
           <p className="mt-1 text-sm font-medium tabular-nums">
             {formatCurrency(rate.high)}
@@ -152,9 +142,7 @@ export function ExchangeRateCard({
         </div>
 
         <div>
-          <p className="text-xs text-muted-foreground">
-            Mínima
-          </p>
+          <p className="text-xs text-muted-foreground">Mínima</p>
 
           <p className="mt-1 text-sm font-medium tabular-nums">
             {formatCurrency(rate.low)}
@@ -162,5 +150,5 @@ export function ExchangeRateCard({
         </div>
       </div>
     </article>
-  )
+  );
 }

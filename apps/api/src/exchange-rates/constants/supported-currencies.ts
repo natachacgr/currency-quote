@@ -11,8 +11,7 @@ export const SUPPORTED_CURRENCIES = [
   'MXN',
 ] as const;
 
-export type SupportedCurrency =
-  (typeof SUPPORTED_CURRENCIES)[number];
+export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
 
 export const DEFAULT_CURRENCIES: SupportedCurrency[] = [
   'USD',

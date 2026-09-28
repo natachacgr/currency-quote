@@ -20,9 +20,7 @@ export interface ExchangeRateHistoryPoint {
 }
 
 export abstract class ExchangeRateProvider {
-  abstract getRates(
-    currencyCodes: string[],
-  ): Promise<ExchangeRate[]>;
+  abstract getRates(currencyCodes: string[]): Promise<ExchangeRate[]>;
 
   abstract getHistory(
     currencyCode: string,

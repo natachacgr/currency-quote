@@ -20,10 +20,7 @@ import {
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 
-import {
-  AuthResponse,
-  AuthService,
-} from './auth.service';
+import { AuthResponse, AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -36,9 +33,7 @@ interface AuthenticatedRequest extends Request {
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @ApiOperation({
@@ -53,12 +48,9 @@ export class AuthController {
     description: 'Usuário cadastrado com sucesso.',
   })
   @ApiConflictResponse({
-    description:
-      'Já existe um usuário cadastrado com este e-mail.',
+    description: 'Já existe um usuário cadastrado com este e-mail.',
   })
-  register(
-    @Body() dto: RegisterDto,
-  ): Promise<AuthResponse> {
+  register(@Body() dto: RegisterDto): Promise<AuthResponse> {
     return this.authService.register(dto);
   }
 
@@ -78,9 +70,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'E-mail ou senha inválidos.',
   })
-  login(
-    @Body() dto: LoginDto,
-  ): Promise<AuthResponse> {
+  login(@Body() dto: LoginDto): Promise<AuthResponse> {
     return this.authService.login(dto);
   }
 
@@ -93,16 +83,12 @@ export class AuthController {
       'Retorna os dados do usuário associado ao token JWT informado.',
   })
   @ApiOkResponse({
-    description:
-      'Dados do usuário autenticado retornados com sucesso.',
+    description: 'Dados do usuário autenticado retornados com sucesso.',
   })
   @ApiUnauthorizedResponse({
-    description:
-      'Token ausente, inválido ou expirado.',
+    description: 'Token ausente, inválido ou expirado.',
   })
-  me(
-    @Req() request: AuthenticatedRequest,
-  ): AuthenticatedUser {
+  me(@Req() request: AuthenticatedRequest): AuthenticatedUser {
     return request.user;
   }
 }

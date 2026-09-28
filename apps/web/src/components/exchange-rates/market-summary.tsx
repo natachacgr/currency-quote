@@ -1,10 +1,8 @@
 interface MarketSummaryProps {
-  totalCurrencies?: number
+  totalCurrencies?: number;
 }
 
-export function MarketSummary({
-  totalCurrencies,
-}: MarketSummaryProps) {
+export function MarketSummary({ totalCurrencies }: MarketSummaryProps) {
   return (
     <section className="mt-10 grid overflow-hidden rounded-2xl border border-border/60 bg-card sm:grid-cols-3">
       <div className="border-b border-border/60 p-5 sm:border-b-0 sm:border-r">
@@ -13,7 +11,7 @@ export function MarketSummary({
         </p>
 
         <p className="mt-2 text-2xl font-semibold tabular-nums">
-          {totalCurrencies ?? '—'}
+          {totalCurrencies ?? "—"}
         </p>
 
         <p className="mt-1 text-xs text-muted-foreground">
@@ -26,13 +24,9 @@ export function MarketSummary({
           Moeda base
         </p>
 
-        <p className="mt-2 text-2xl font-semibold">
-          BRL
-        </p>
+        <p className="mt-2 text-2xl font-semibold">BRL</p>
 
-        <p className="mt-1 text-xs text-muted-foreground">
-          Real Brasileiro
-        </p>
+        <p className="mt-1 text-xs text-muted-foreground">Real Brasileiro</p>
       </div>
 
       <div className="p-5">
@@ -46,9 +40,7 @@ export function MarketSummary({
             <span className="relative inline-flex size-2.5 rounded-full bg-emerald-500" />
           </span>
 
-          <p className="text-lg font-semibold">
-            Online
-          </p>
+          <p className="text-lg font-semibold">Online</p>
         </div>
 
         <p className="mt-1 text-xs text-muted-foreground">
@@ -56,5 +48,5 @@ export function MarketSummary({
         </p>
       </div>
     </section>
-  )
+  );
 }

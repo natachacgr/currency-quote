@@ -246,63 +246,57 @@
 //   )
 // }
 
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   Eye,
   EyeOff,
   LoaderCircle,
   LockKeyhole,
-} from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { useAuth } from '@/auth/use-auth'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useAuth } from "@/auth/use-auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function LoginPage() {
-  const navigate = useNavigate()
-  const { login } = useAuth()
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] =
-    useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [error, setError] = useState<string | null>(
-    null,
-  )
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault()
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
     if (!email.trim() || !password) {
-      setError('Preencha seu e-mail e sua senha.')
-      return
+      setError("Preencha seu e-mail e sua senha.");
+      return;
     }
 
     try {
-      setIsSubmitting(true)
-      setError(null)
+      setIsSubmitting(true);
+      setError(null);
 
       await login({
         email: email.trim(),
         password,
-      })
+      });
 
-      void navigate('/')
+      void navigate("/");
     } catch {
       setError(
-        'E-mail ou senha inválidos. Verifique os dados e tente novamente.',
-      )
+        "E-mail ou senha inválidos. Verifique os dados e tente novamente.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
@@ -335,19 +329,14 @@ export function LoginPage() {
               </h1>
 
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Acesse sua conta para salvar moedas
-                favoritas e acompanhar suas cotações.
+                Acesse sua conta para salvar moedas favoritas e acompanhar suas
+                cotações.
               </p>
             </div>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">
-                  E-mail
-                </Label>
+                <Label htmlFor="email">E-mail</Label>
 
                 <Input
                   id="email"
@@ -355,48 +344,32 @@ export function LoginPage() {
                   autoComplete="email"
                   placeholder="seu@email.com"
                   value={email}
-                  onChange={(event) =>
-                    setEmail(event.target.value)
-                  }
+                  onChange={(event) => setEmail(event.target.value)}
                   disabled={isSubmitting}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">
-                  Senha
-                </Label>
+                <Label htmlFor="password">Senha</Label>
 
                 <div className="relative">
                   <Input
                     id="password"
-                    type={
-                      showPassword
-                        ? 'text'
-                        : 'password'
-                    }
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     placeholder="Digite sua senha"
                     value={password}
-                    onChange={(event) =>
-                      setPassword(event.target.value)
-                    }
+                    onChange={(event) => setPassword(event.target.value)}
                     disabled={isSubmitting}
                     className="pr-11"
                   />
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowPassword(
-                        (current) => !current,
-                      )
-                    }
+                    onClick={() => setShowPassword((current) => !current)}
                     className="absolute right-0 top-0 flex size-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
                     aria-label={
-                      showPassword
-                        ? 'Ocultar senha'
-                        : 'Mostrar senha'
+                      showPassword ? "Ocultar senha" : "Mostrar senha"
                     }
                   >
                     {showPassword ? (
@@ -417,24 +390,20 @@ export function LoginPage() {
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <LoaderCircle className="size-4 animate-spin" />
                     Entrando...
                   </>
                 ) : (
-                  'Entrar'
+                  "Entrar"
                 )}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              Ainda não possui uma conta?{' '}
+              Ainda não possui uma conta?{" "}
               <Link
                 to="/register"
                 className="font-medium text-foreground underline-offset-4 hover:underline"
@@ -447,54 +416,50 @@ export function LoginPage() {
       </div>
 
       <aside className="relative hidden flex-1 overflow-hidden border-l border-border/60 lg:flex lg:items-center">
-  <img
-    src="/financial-market-bg.png"
-    alt=""
-    className="absolute inset-0 size-full object-cover"
-  />
+        <img
+          src="/financial-market-bg.png"
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+        />
 
-  <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0 bg-black/45" />
 
-  <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/20 to-transparent" />
 
-  <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-black/20" />
 
-  <div className="relative z-10 w-full max-w-lg px-12 text-white xl:px-16 2xl:px-20">
-    <div className="mb-8 flex items-center gap-3">
-      <div className="size-2 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50" />
+        <div className="relative z-10 w-full max-w-lg px-12 text-white xl:px-16 2xl:px-20">
+          <div className="mb-8 flex items-center gap-3">
+            <div className="size-2 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50" />
 
-      <span className="text-xs font-medium uppercase tracking-wider text-white/60">
-        Global Markets
-      </span>
-    </div>
+            <span className="text-xs font-medium uppercase tracking-wider text-white/60">
+              Global Markets
+            </span>
+          </div>
 
-    <h2 className="text-4xl font-semibold leading-tight tracking-tight">
-      Suas moedas favoritas em um só lugar.
-    </h2>
+          <h2 className="text-4xl font-semibold leading-tight tracking-tight">
+            Suas moedas favoritas em um só lugar.
+          </h2>
 
-    <p className="mt-5 text-base leading-relaxed text-white/65">
-      Acompanhe as principais moedas em relação ao Real
-      Brasileiro e personalize sua experiência de mercado.
-    </p>
-
-    <div className="mt-10 grid grid-cols-3 gap-3">
-      {['USD', 'EUR', 'GBP'].map((currency) => (
-        <div
-          key={currency}
-          className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 backdrop-blur-md"
-        >
-          <p className="text-sm font-semibold text-white">
-            {currency}
+          <p className="mt-5 text-base leading-relaxed text-white/65">
+            Acompanhe as principais moedas em relação ao Real Brasileiro e
+            personalize sua experiência de mercado.
           </p>
 
-          <p className="mt-1 text-xs text-white/50">
-            / BRL
-          </p>
+          <div className="mt-10 grid grid-cols-3 gap-3">
+            {["USD", "EUR", "GBP"].map((currency) => (
+              <div
+                key={currency}
+                className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 backdrop-blur-md"
+              >
+                <p className="text-sm font-semibold text-white">{currency}</p>
+
+                <p className="mt-1 text-xs text-white/50">/ BRL</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</aside>
+      </aside>
     </main>
-  )
+  );
 }

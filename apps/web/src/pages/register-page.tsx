@@ -1,73 +1,55 @@
-import { useState, type FormEvent } from 'react'
-import {
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  LoaderCircle,
-  UserPlus,
-} from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, type FormEvent } from "react";
+import { ArrowLeft, Eye, EyeOff, LoaderCircle, UserPlus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { useAuth } from '@/auth/use-auth'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useAuth } from "@/auth/use-auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function RegisterPage() {
-  const navigate = useNavigate()
-  const { register } = useAuth()
+  const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] =
-    useState(false)
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [error, setError] = useState<string | null>(
-    null,
-  )
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault()
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-    if (
-      !name.trim() ||
-      !email.trim() ||
-      !password
-    ) {
-      setError('Preencha todos os campos.')
-      return
+    if (!name.trim() || !email.trim() || !password) {
+      setError("Preencha todos os campos.");
+      return;
     }
 
     if (password.length < 6) {
-      setError(
-        'A senha deve possuir pelo menos 6 caracteres.',
-      )
-      return
+      setError("A senha deve possuir pelo menos 6 caracteres.");
+      return;
     }
 
     try {
-      setIsSubmitting(true)
-      setError(null)
+      setIsSubmitting(true);
+      setError(null);
 
       await register({
         name: name.trim(),
         email: email.trim(),
         password,
-      })
+      });
 
-      void navigate('/')
+      void navigate("/");
     } catch {
       setError(
-        'Não foi possível criar sua conta. Verifique os dados e tente novamente.',
-      )
+        "Não foi possível criar sua conta. Verifique os dados e tente novamente.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
@@ -100,19 +82,14 @@ export function RegisterPage() {
               </h1>
 
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Crie sua conta para salvar suas moedas
-                favoritas e personalizar sua experiência.
+                Crie sua conta para salvar suas moedas favoritas e personalizar
+                sua experiência.
               </p>
             </div>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="name">
-                  Nome
-                </Label>
+                <Label htmlFor="name">Nome</Label>
 
                 <Input
                   id="name"
@@ -120,17 +97,13 @@ export function RegisterPage() {
                   autoComplete="name"
                   placeholder="Seu nome"
                   value={name}
-                  onChange={(event) =>
-                    setName(event.target.value)
-                  }
+                  onChange={(event) => setName(event.target.value)}
                   disabled={isSubmitting}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">
-                  E-mail
-                </Label>
+                <Label htmlFor="email">E-mail</Label>
 
                 <Input
                   id="email"
@@ -138,50 +111,32 @@ export function RegisterPage() {
                   autoComplete="email"
                   placeholder="seu@email.com"
                   value={email}
-                  onChange={(event) =>
-                    setEmail(event.target.value)
-                  }
+                  onChange={(event) => setEmail(event.target.value)}
                   disabled={isSubmitting}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">
-                  Senha
-                </Label>
+                <Label htmlFor="password">Senha</Label>
 
                 <div className="relative">
                   <Input
                     id="password"
-                    type={
-                      showPassword
-                        ? 'text'
-                        : 'password'
-                    }
+                    type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     placeholder="Crie uma senha"
                     value={password}
-                    onChange={(event) =>
-                      setPassword(
-                        event.target.value,
-                      )
-                    }
+                    onChange={(event) => setPassword(event.target.value)}
                     disabled={isSubmitting}
                     className="pr-11"
                   />
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowPassword(
-                        (current) => !current,
-                      )
-                    }
+                    onClick={() => setShowPassword((current) => !current)}
                     className="absolute right-0 top-0 flex size-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
                     aria-label={
-                      showPassword
-                        ? 'Ocultar senha'
-                        : 'Mostrar senha'
+                      showPassword ? "Ocultar senha" : "Mostrar senha"
                     }
                   >
                     {showPassword ? (
@@ -206,24 +161,20 @@ export function RegisterPage() {
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <LoaderCircle className="size-4 animate-spin" />
                     Criando conta...
                   </>
                 ) : (
-                  'Criar conta'
+                  "Criar conta"
                 )}
               </Button>
             </form>
 
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              Já possui uma conta?{' '}
+              Já possui uma conta?{" "}
               <Link
                 to="/login"
                 className="font-medium text-foreground underline-offset-4 hover:underline"
@@ -262,31 +213,24 @@ export function RegisterPage() {
           </h2>
 
           <p className="mt-5 text-base leading-relaxed text-white/65">
-            Salve suas principais moedas e tenha acesso
-            rápido às cotações que mais importam para
-            você.
+            Salve suas principais moedas e tenha acesso rápido às cotações que
+            mais importam para você.
           </p>
 
           <div className="mt-10 grid grid-cols-3 gap-3">
-            {['USD', 'EUR', 'GBP'].map(
-              (currency) => (
-                <div
-                  key={currency}
-                  className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 backdrop-blur-md"
-                >
-                  <p className="text-sm font-semibold text-white">
-                    {currency}
-                  </p>
+            {["USD", "EUR", "GBP"].map((currency) => (
+              <div
+                key={currency}
+                className="rounded-xl border border-white/15 bg-black/30 px-4 py-3 backdrop-blur-md"
+              >
+                <p className="text-sm font-semibold text-white">{currency}</p>
 
-                  <p className="mt-1 text-xs text-white/50">
-                    / BRL
-                  </p>
-                </div>
-              ),
-            )}
+                <p className="mt-1 text-xs text-white/50">/ BRL</p>
+              </div>
+            ))}
           </div>
         </div>
       </aside>
     </main>
-  )
+  );
 }

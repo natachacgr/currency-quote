@@ -1,34 +1,20 @@
-import {
-  ArrowLeft,
-  LogOut,
-  Mail,
-  Star,
-  User,
-} from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, LogOut, Mail, Star, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
-import { useAuth } from '@/auth/use-auth'
-import { Button } from '@/components/ui/button'
-import { useFavorites } from '@/hooks/use-favorites'
+import { useAuth } from "@/auth/use-auth";
+import { Button } from "@/components/ui/button";
+import { useFavorites } from "@/hooks/use-favorites";
 
 export function ProfilePage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const {
-    user,
-    logout,
-    isAuthenticated,
-  } = useAuth()
+  const { user, logout, isAuthenticated } = useAuth();
 
-  const {
-    favorites,
-    isLoading,
-    isError,
-  } = useFavorites(isAuthenticated)
+  const { favorites, isLoading, isError } = useFavorites(isAuthenticated);
 
   function handleLogout() {
-    logout()
-    void navigate('/')
+    logout();
+    void navigate("/");
   }
 
   return (
@@ -43,10 +29,7 @@ export function ProfilePage() {
             Voltar ao mercado
           </Link>
 
-          <Button
-            variant="outline"
-            onClick={handleLogout}
-          >
+          <Button variant="outline" onClick={handleLogout}>
             <LogOut className="size-4" />
             Sair
           </Button>
@@ -59,13 +42,10 @@ export function ProfilePage() {
             Minha conta
           </p>
 
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-            Perfil
-          </h1>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">Perfil</h1>
 
           <p className="mt-2 text-sm text-muted-foreground">
-            Visualize seus dados e acompanhe suas
-            moedas favoritas.
+            Visualize seus dados e acompanhe suas moedas favoritas.
           </p>
         </section>
 
@@ -81,9 +61,7 @@ export function ProfilePage() {
                   Informações pessoais
                 </p>
 
-                <h2 className="font-semibold">
-                  {user?.name}
-                </h2>
+                <h2 className="font-semibold">{user?.name}</h2>
               </div>
             </div>
 
@@ -92,13 +70,9 @@ export function ProfilePage() {
                 <Mail className="mt-0.5 size-4 text-muted-foreground" />
 
                 <div>
-                  <p className="text-xs text-muted-foreground">
-                    E-mail
-                  </p>
+                  <p className="text-xs text-muted-foreground">E-mail</p>
 
-                  <p className="mt-1 text-sm font-medium">
-                    {user?.email}
-                  </p>
+                  <p className="mt-1 text-sm font-medium">{user?.email}</p>
                 </div>
               </div>
             </div>
@@ -114,13 +88,13 @@ export function ProfilePage() {
             </p>
 
             <p className="mt-1 text-3xl font-semibold tabular-nums">
-              {isLoading ? '—' : favorites.length}
+              {isLoading ? "—" : favorites.length}
             </p>
 
             <p className="mt-1 text-sm text-muted-foreground">
               {favorites.length === 1
-                ? 'moeda favoritada'
-                : 'moedas favoritadas'}
+                ? "moeda favoritada"
+                : "moedas favoritadas"}
             </p>
           </section>
         </div>
@@ -149,8 +123,7 @@ export function ProfilePage() {
           {isError && (
             <div className="py-12 text-center">
               <p className="font-medium">
-                Não foi possível carregar seus
-                favoritos.
+                Não foi possível carregar seus favoritos.
               </p>
 
               <p className="mt-1 text-sm text-muted-foreground">
@@ -159,67 +132,54 @@ export function ProfilePage() {
             </div>
           )}
 
-          {!isLoading &&
-            !isError &&
-            favorites.length === 0 && (
-              <div className="py-12 text-center">
-                <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-muted">
-                  <Star className="size-5 text-muted-foreground" />
-                </div>
-
-                <p className="mt-4 font-medium">
-                  Nenhuma moeda favorita
-                </p>
-
-                <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
-                  Favorite moedas no dashboard para
-                  encontrá-las rapidamente aqui.
-                </p>
-
-                <Button
-                  asChild
-                  variant="outline"
-                  className="mt-5"
-                >
-                  <Link to="/">
-                    Explorar moedas
-                  </Link>
-                </Button>
+          {!isLoading && !isError && favorites.length === 0 && (
+            <div className="py-12 text-center">
+              <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-muted">
+                <Star className="size-5 text-muted-foreground" />
               </div>
-            )}
 
-          {!isLoading &&
-            !isError &&
-            favorites.length > 0 && (
-              <div className="divide-y divide-border/60">
-                {favorites.map((favorite) => (
-                  <div
-                    key={favorite.id}
-                    className="flex items-center justify-between gap-4 py-4"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex size-10 items-center justify-center rounded-xl bg-muted text-sm font-semibold">
-                        {favorite.currency.code}
-                      </div>
+              <p className="mt-4 font-medium">Nenhuma moeda favorita</p>
 
-                      <div>
-                        <p className="font-medium">
-                          {favorite.currency.code} / BRL
-                        </p>
+              <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
+                Favorite moedas no dashboard para encontrá-las rapidamente aqui.
+              </p>
 
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {favorite.currency.name}
-                        </p>
-                      </div>
+              <Button asChild variant="outline" className="mt-5">
+                <Link to="/">Explorar moedas</Link>
+              </Button>
+            </div>
+          )}
+
+          {!isLoading && !isError && favorites.length > 0 && (
+            <div className="divide-y divide-border/60">
+              {favorites.map((favorite) => (
+                <div
+                  key={favorite.id}
+                  className="flex items-center justify-between gap-4 py-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex size-10 items-center justify-center rounded-xl bg-muted text-sm font-semibold">
+                      {favorite.currency.code}
                     </div>
 
-                    <Star className="size-4 fill-amber-400 text-amber-400" />
+                    <div>
+                      <p className="font-medium">
+                        {favorite.currency.code} / BRL
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {favorite.currency.name}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
+
+                  <Star className="size-4 fill-amber-400 text-amber-400" />
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>
-  )
+  );
 }

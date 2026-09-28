@@ -1,36 +1,20 @@
-import { Link } from 'react-router-dom'
-import {
-  CircleUserRound,
-  LogOut,
-  Moon,
-  Sun,
-  TrendingUp,
-} from 'lucide-react'
+import { Link } from "react-router-dom";
+import { CircleUserRound, LogOut, Moon, Sun, TrendingUp } from "lucide-react";
 
-import { useAuth } from '@/auth/use-auth'
-import { Button } from '@/components/ui/button'
-import { useTheme } from '@/theme/use-theme'
+import { useAuth } from "@/auth/use-auth";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/theme/use-theme";
 
 export function Header() {
-  const {
-    user,
-    isAuthenticated,
-    logout,
-  } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const {
-    theme,
-    toggleTheme,
-  } = useTheme()
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-8">
-          <Link
-            to="/"
-            className="group flex items-center gap-3"
-          >
+          <Link to="/" className="group flex items-center gap-3">
             <div className="flex size-9 items-center justify-center rounded-xl bg-foreground text-background transition-transform group-hover:scale-105">
               <TrendingUp className="size-5" />
             </div>
@@ -38,9 +22,7 @@ export function Header() {
             <div className="leading-none">
               <p className="text-sm font-semibold tracking-tight sm:text-base">
                 Currency
-                <span className="text-muted-foreground">
-                  Quote
-                </span>
+                <span className="text-muted-foreground">Quote</span>
               </p>
 
               <p className="mt-1 hidden text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">
@@ -67,17 +49,11 @@ export function Header() {
             size="icon"
             onClick={toggleTheme}
             aria-label={
-              theme === 'dark'
-                ? 'Ativar tema claro'
-                : 'Ativar tema escuro'
+              theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"
             }
-            title={
-              theme === 'dark'
-                ? 'Tema claro'
-                : 'Tema escuro'
-            }
+            title={theme === "dark" ? "Tema claro" : "Tema escuro"}
           >
-            {theme === 'dark' ? (
+            {theme === "dark" ? (
               <Sun className="size-4.5" />
             ) : (
               <Moon className="size-4.5" />
@@ -88,16 +64,11 @@ export function Header() {
 
           {isAuthenticated && user ? (
             <>
-              <Button
-                variant="ghost"
-                asChild
-              >
+              <Button variant="ghost" asChild>
                 <Link to="/profile">
                   <CircleUserRound className="size-4" />
 
-                  <span className="hidden sm:inline">
-                    {user.name}
-                  </span>
+                  <span className="hidden sm:inline">{user.name}</span>
                 </Link>
               </Button>
 
@@ -113,29 +84,17 @@ export function Header() {
             </>
           ) : (
             <>
-              <Button
-                variant="ghost"
-                asChild
-                className="hidden sm:inline-flex"
-              >
-                <Link to="/login">
-                  Entrar
-                </Link>
+              <Button variant="ghost" asChild className="hidden sm:inline-flex">
+                <Link to="/login">Entrar</Link>
               </Button>
 
-              <Button
-                asChild
-                size="sm"
-                className="rounded-lg"
-              >
-                <Link to="/register">
-                  Criar conta
-                </Link>
+              <Button asChild size="sm" className="rounded-lg">
+                <Link to="/register">Criar conta</Link>
               </Button>
             </>
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }

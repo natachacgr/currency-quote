@@ -34,30 +34,21 @@ interface AuthenticatedRequest extends Request {
 @ApiTags('Favorites')
 @ApiBearerAuth()
 export class FavoritesController {
-  constructor(
-    private readonly favoritesService: FavoritesService,
-  ) {}
+  constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
   @ApiOperation({
     summary: 'Listar moedas favoritas',
-    description:
-      'Retorna todas as moedas favoritas do usuário autenticado.',
+    description: 'Retorna todas as moedas favoritas do usuário autenticado.',
   })
   @ApiOkResponse({
-    description:
-      'Lista de moedas favoritas retornada com sucesso.',
+    description: 'Lista de moedas favoritas retornada com sucesso.',
   })
   @ApiUnauthorizedResponse({
-    description:
-      'Token ausente, inválido ou expirado.',
+    description: 'Token ausente, inválido ou expirado.',
   })
-  findAll(
-    @Req() request: AuthenticatedRequest,
-  ) {
-    return this.favoritesService.findAllByUser(
-      request.user.id,
-    );
+  findAll(@Req() request: AuthenticatedRequest) {
+    return this.favoritesService.findAllByUser(request.user.id);
   }
 
   @Post(':currencyCode')
@@ -73,29 +64,22 @@ export class FavoritesController {
     enum: SUPPORTED_CURRENCIES,
   })
   @ApiCreatedResponse({
-    description:
-      'Moeda adicionada aos favoritos com sucesso.',
+    description: 'Moeda adicionada aos favoritos com sucesso.',
   })
   @ApiConflictResponse({
-    description:
-      'A moeda já está na lista de favoritos do usuário.',
+    description: 'A moeda já está na lista de favoritos do usuário.',
   })
   @ApiNotFoundResponse({
-    description:
-      'A moeda informada não foi encontrada.',
+    description: 'A moeda informada não foi encontrada.',
   })
   @ApiUnauthorizedResponse({
-    description:
-      'Token ausente, inválido ou expirado.',
+    description: 'Token ausente, inválido ou expirado.',
   })
   add(
     @Req() request: AuthenticatedRequest,
     @Param('currencyCode') currencyCode: string,
   ) {
-    return this.favoritesService.add(
-      request.user.id,
-      currencyCode,
-    );
+    return this.favoritesService.add(request.user.id, currencyCode);
   }
 
   @Delete(':currencyCode')
@@ -111,24 +95,18 @@ export class FavoritesController {
     enum: SUPPORTED_CURRENCIES,
   })
   @ApiOkResponse({
-    description:
-      'Moeda removida dos favoritos com sucesso.',
+    description: 'Moeda removida dos favoritos com sucesso.',
   })
   @ApiNotFoundResponse({
-    description:
-      'A moeda não está na lista de favoritos do usuário.',
+    description: 'A moeda não está na lista de favoritos do usuário.',
   })
   @ApiUnauthorizedResponse({
-    description:
-      'Token ausente, inválido ou expirado.',
+    description: 'Token ausente, inválido ou expirado.',
   })
   remove(
     @Req() request: AuthenticatedRequest,
     @Param('currencyCode') currencyCode: string,
   ) {
-    return this.favoritesService.remove(
-      request.user.id,
-      currencyCode,
-    );
+    return this.favoritesService.remove(request.user.id, currencyCode);
   }
 }

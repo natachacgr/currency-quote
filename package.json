@@ -1,0 +1,24 @@
+{
+  "name": "currency-quote",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Currency Quote - aplicação web para consulta de cotações de moedas em BRL",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev --workspace=api",
+    "dev:web": "npm run dev --workspace=web",
+    "build:api": "npm run build --workspace=api",
+    "build:web": "npm run build --workspace=web",
+    "test:api": "npm run test --workspace=api"
+  },
+  "keywords": [
+    "currency",
+    "exchange-rate",
+    "react",
+    "nestjs"
+  ],
+  "license": "MIT"
+}

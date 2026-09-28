@@ -1,0 +1,48 @@
+// Prisma schema for Currency Quote API
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String             @id @default(uuid())
+  name         String
+  email        String             @unique
+  passwordHash String
+  favorites    FavoriteCurrency[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@map("users")
+}
+
+model Currency {
+  id        String             @id @default(uuid())
+  code      String             @unique
+  name      String
+  favorites FavoriteCurrency[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@map("currencies")
+}
+
+model FavoriteCurrency {
+  id         String   @id @default(uuid())
+  userId     String
+  currencyId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency Currency @relation(fields: [currencyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, currencyId])
+  @@index([userId])
+  @@index([currencyId])
+  @@map("favorite_currencies")
+}
